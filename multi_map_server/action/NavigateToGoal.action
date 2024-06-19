@@ -1,0 +1,9 @@
+# Goal definition
+string map_name
+geometry_msgs/Pose goal_pose
+---
+# Result definition
+bool result
+---
+# Feedback
+geometry_msgs/Pose current_pose

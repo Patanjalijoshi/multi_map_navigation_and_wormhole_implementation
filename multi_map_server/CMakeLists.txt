@@ -44,6 +44,7 @@ catkin_package(
     geometry_msgs
     move_base_msgs
     roscpp
+    roslib
     std_msgs
     nav_msgs
 )
@@ -51,13 +52,14 @@ catkin_package(
 
 ## Specify additional locations of header files
 include_directories(
+  include
   ${catkin_INCLUDE_DIRS}
   ${SQLite3_INCLUDE_DIRS}  ## Add SQLite3 include directory
 )
 
 ## Declare a C++ executable
 add_executable(multi_map_server
-  src/multi_map_server.cpp
+  src/MultiMapServer.cpp
 )
 
 ## Add dependencies to the executable

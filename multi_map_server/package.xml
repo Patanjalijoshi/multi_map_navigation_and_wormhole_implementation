@@ -19,6 +19,7 @@
 
   <depend>catkin</depend>
   <depend>roscpp</depend>
+  <depend>roslib</depend>
   <depend>std_msgs</depend>
   <depend>nav_msgs</depend>
   <depend>actionlib</depend>

@@ -149,6 +149,18 @@ void NavigateToGoalAction::navigateToGoalServerCallBack(const multi_map_server::
     
     if (m_currentMap == goal->map_name) // Directly navigate to the goal in the current map
     {  
+
+        if(m_GoalInMap) //checking if the given goal position is in the map
+        {
+          m_success = sendMoveBaseGoal(goal->goal_pose);
+        }
+        else
+        {
+          ROS_INFO("%s: Failed", m_actionName.c_str());
+          m_result.result = false;
+          m_as.setAborted(m_result);
+          return;
+        }
       
 
         while (!m_goalReached)
@@ -160,8 +172,6 @@ void NavigateToGoalAction::navigateToGoalServerCallBack(const multi_map_server::
                 m_success = false;
                 break;
             }
-
-            m_goalReached = sendMoveBaseGoal(goal->goal_pose);
 
             // Publish feedback
             m_feedback.current_pose = m_currentRobotPose;
@@ -232,19 +242,31 @@ void NavigateToGoalAction::navigateToGoalServerCallBack(const multi_map_server::
 
             m_initPose.pose.pose = m_newMapInitPose;
             initPosePub.publish(m_initPose);
-
+            
+            //checking if the given goal position is in the map
+            if(m_GoalInMap)
+            {
+              m_success = sendMoveBaseGoal(goal->goal_pose);
+            }
+            else
+            {
+              ROS_INFO("%s: Failed", m_actionName.c_str());
+              m_result.result = false;
+              m_as.setAborted(m_result);
+              return;
+            }
             
 
             while (!m_success)
             {
-                if (m_as.isPreemptRequested() || !ros::ok() || !m_GoalInMap)
+                if (m_as.isPreemptRequested() || !ros::ok())
                 {
                     ROS_INFO("%s: Preempted", m_actionName.c_str());
                     m_as.setPreempted();
                     m_success = false;
                     break;
                 }
-                m_success = sendMoveBaseGoal(goal->goal_pose);
+                
                 // Publish feedback
                 m_feedback.current_pose = m_currentRobotPose;
                 m_as.publishFeedback(m_feedback);
